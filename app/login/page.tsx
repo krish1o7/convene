@@ -94,7 +94,7 @@ function LoginPageContent() {
       // Trust the server's role if it sends one; otherwise fall back
       // to whichever tab the person picked.
       const effectiveRole: LoginAs = res.data.user?.role || loginAs;
-      router.push(effectiveRole === "organizer" ? "/organizer" : "/events");
+      router.push(effectiveRole === "organizer" ? "/organizer" : "/home");
     } catch (err: any) {
       setError(err?.response?.data?.message || "Invalid email or password");
       console.error(err);
