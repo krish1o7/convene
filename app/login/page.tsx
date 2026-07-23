@@ -31,6 +31,10 @@ function LoginPageContent() {
 
   useEffect(() => {
     setMounted(true);
+    // Clear any stale session tokens on the login page so users
+    // are never auto-bypassed into the app as a ghost/guest session.
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
   }, []);
 
   // Typewriter effect, runs once.
