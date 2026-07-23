@@ -139,7 +139,7 @@ function getProfileEmail(profile: Attendee | null): string {
   return profile.email || `${profile.name.toLowerCase().replace(/[^a-z0-9]/g, "")}@convene.org`;
 }
 
-const QUICK_TAGS = ["All", "AI & ML", "Design Systems", "Web Dev", "AR/VR", "Product", "Security"];
+ const QUICK_TAGS = ["All", "AI & ML", "Design Systems", "Web Dev", "AR/VR", "Product", "Security"];
 
 export default function NetworkPage() {
   const [tab, setTab] = useState<Tab>("directory");
@@ -428,7 +428,7 @@ export default function NetworkPage() {
                 </div>
 
                 {/* Quick Topic Chips */}
-                <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                {/* <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
                   <span className="text-xs font-bold text-[#64748B] shrink-0 flex items-center gap-1 mr-1">
                     <Filter className="h-3 w-3" /> Quick Filter:
                   </span>
@@ -445,7 +445,7 @@ export default function NetworkPage() {
                       {tag}
                     </button>
                   ))}
-                </div>
+                </div> */}
               </div>
 
               {loadingAttendees ? (
