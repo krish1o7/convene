@@ -5,15 +5,6 @@ import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import Navbar from "@/components/ui/Navbar";
 
-/**
- * ── Select Event ──────────────────────────────────────────────
- * Same design system as Navbar / Networking: ink #1C2321, paper
- * #F4F6F5, teal #1F7A6C accent, hairline #DEE3E0 — kept deliberately
- * quiet here. No shadows, one accent color, generous whitespace.
- * Logic is unchanged from the original: auth guard, load events,
- * join-by-code, select event, logout.
- */
-
 type Event = {
   _id: string;
   name: string;
@@ -48,10 +39,7 @@ export default function EventsPage() {
 
   async function loadEvents() {
     try {
-      const token = localStorage.getItem("token");
-      const res = await api.get("/api/events", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get("/api/events");
       setEvents(res.data);
     } catch (err) {
       console.error(err);
@@ -74,12 +62,7 @@ export default function EventsPage() {
     setJoinError(null);
     setJoining(true);
     try {
-      const token = localStorage.getItem("token");
-      const res = await api.post(
-        "/api/events/join",
-        { code: code.trim() },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await api.post("/api/events/join", { code: code.trim() });
       localStorage.setItem("currentEvent", JSON.stringify(res.data));
       router.push("/program");
     } catch (err: any) {
@@ -98,124 +81,128 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="sticky top-0 z-50 border-b border-[#DEE3E0] bg-white/90 backdrop-blur"> <Navbar/>
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto max-w-3xl px-6 py-14">
-        {/* Header */}
-        <div className="mb-10 flex items-start justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-[#1C2321]">
+    <>
+      <div className="sticky top-0 z-50 border-b border-[#232833] bg-[#0D0F12]/90 backdrop-blur">
+        <Navbar />
+      </div>
+      <main className="min-h-screen bg-[#0D0F12] text-[#F9FAFB] animate-fade-in">
+        <div className="mx-auto max-w-3xl px-6 py-14">
+          {/* Header */}
+          <div className="mb-10">
+            <h1 className="text-3xl font-bold tracking-tight text-white">
               Select an event
             </h1>
-            <p className="mt-1 text-[#6B7280]">
+            <p className="mt-1 text-[#94A3B8]">
               Choose an event you're part of, or join one with a code.
             </p>
           </div>
 
-          <button
-            onClick={logout}
-            className="text-sm font-medium text-[#9AA5A2] transition hover:text-[#1C2321]"
-          >
-            Log out
-          </button>
-        </div>
-
-        {/* Join by code */}
-        <div className="mb-12 rounded-2xl border border-[#E5E7EB] p-5">
-          <p className="mb-3 text-sm font-semibold text-[#1C2321]">
-            Have a join code?
-          </p>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={code}
-              onChange={(e) => {
-                setCode(e.target.value);
-                if (joinError) setJoinError(null);
-              }}
-              onKeyDown={(e) => e.key === "Enter" && joinEvent()}
-              placeholder="e.g. SUMMIT2026"
-              className="flex-1 rounded-lg border border-[#E5E7EB] px-4 py-2.5 text-sm text-[#1C2321] outline-none placeholder:text-[#B0B7B5] focus:border-[#1F7A6C] focus:ring-2 focus:ring-[#1F7A6C]/15"
-            />
-            <button
-              onClick={joinEvent}
-              disabled={joining}
-              className="rounded-lg bg-[#1F7A6C] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#19645A] disabled:opacity-50"
-            >
-              {joining ? "Joining…" : "Join"}
-            </button>
-          </div>
-          {joinError && (
-            <p className="mt-2 text-sm text-[#B14A3F]">{joinError}</p>
-          )}
-        </div>
-
-        {/* Events list */}
-        <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-[#9AA5A2]">
-          Your events
-        </p>
-
-        {loading ? (
-          <div className="space-y-3">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-24 animate-pulse rounded-2xl border border-[#E5E7EB]"
-              />
-            ))}
-          </div>
-        ) : events.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-[#E5E7EB] p-10 text-center">
-            <p className="font-semibold text-[#1C2321]">No events yet</p>
-            <p className="mt-1 text-sm text-[#6B7280]">
-              Join one above with a code to get started.
+          {/* Join by code */}
+          <div className="mb-12 rounded-3xl border border-[#232833] bg-[#14171D] p-6 shadow-sm">
+            <p className="mb-3 text-sm font-semibold text-white">
+              Have a join code?
             </p>
-          </div>
-        ) : (
-          <div className="divide-y divide-[#E5E7EB] rounded-2xl border border-[#E5E7EB]">
-            {events.map((event) => (
-              <div
-                key={event._id}
-                className="flex items-center justify-between gap-6 p-5"
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => {
+                  setCode(e.target.value);
+                  if (joinError) setJoinError(null);
+                }}
+                onKeyDown={(e) => e.key === "Enter" && joinEvent()}
+                placeholder="e.g. SUMMIT2026"
+                className="flex-1 rounded-2xl border border-[#232833] bg-[#1E232D] px-4 py-2.5 text-sm text-white outline-none placeholder:text-[#64748B] focus:border-[#2DD4BF] focus:ring-2 focus:ring-[#2DD4BF]/20"
+              />
+              <button
+                onClick={joinEvent}
+                disabled={joining}
+                className="rounded-2xl bg-[#2DD4BF] px-5 py-2.5 text-sm font-semibold text-[#0D0F12] transition hover:bg-[#14B8A6] disabled:opacity-50"
               >
-                <div className="min-w-0">
-                  <h3 className="truncate text-lg font-bold text-[#1C2321]">
-                    {event.name}
-                  </h3>
-                  {event.description && (
-                    <p className="mt-0.5 truncate text-sm text-[#6B7280]">
-                      {event.description}
-                    </p>
-                  )}
-                  <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#9AA5A2]">
-                    <span className="capitalize">{event.mode}</span>
-                    {event.locationName && (
-                      <>
-                        <span>·</span>
-                        <span>{event.locationName}</span>
-                      </>
+                {joining ? "Joining…" : "Join"}
+              </button>
+            </div>
+            {joinError && (
+              <p className="mt-2 text-sm text-[#EF4444]">{joinError}</p>
+            )}
+          </div>
+
+          {/* Events list */}
+          <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-[#94A3B8]">
+            Your events
+          </p>
+
+          {loading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-24 animate-pulse rounded-2xl border border-[#232833] bg-[#14171D]"
+                />
+              ))}
+            </div>
+          ) : events.length === 0 ? (
+            <div className="rounded-3xl border border-dashed border-[#232833] bg-[#14171D] p-10 text-center">
+              <p className="font-semibold text-white">No events yet</p>
+              <p className="mt-1 text-sm text-[#94A3B8]">
+                Join one above with a code to get started.
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-[#232833] overflow-hidden rounded-3xl border border-[#232833] bg-[#14171D] shadow-sm">
+              {events.map((event) => (
+                <div
+                  key={event._id}
+                  onClick={() => selectEvent(event)}
+                  className="group flex items-center justify-between gap-6 p-6 cursor-pointer hover:bg-[#1E232D]/70 transition-colors"
+                >
+                  <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-lg font-bold text-white group-hover:text-[#2DD4BF] transition-colors">
+                      {event.name}
+                    </h3>
+                    {event.description && (
+                      <p className="mt-0.5 truncate text-sm text-[#94A3B8]">
+                        {event.description}
+                      </p>
                     )}
-                    {event.joinCode && (
-                      <>
-                        <span>·</span>
-                        <span className="font-mono">{event.joinCode}</span>
-                      </>
-                    )}
+                    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#94A3B8]">
+                      <span className="capitalize">{event.mode}</span>
+                      {event.locationName && (
+                        <>
+                          <span>·</span>
+                          <span>{event.locationName}</span>
+                        </>
+                      )}
+                      {event.joinCode && (
+                        <>
+                          <span>·</span>
+                          <span className="font-mono text-[#2DD4BF] font-semibold">{event.joinCode}</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="shrink-0 text-[#94A3B8] group-hover:text-[#2DD4BF] group-hover:translate-x-1 transition-all">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M5 12h14" />
+                      <path d="m12 5 7 7-7 7" />
+                    </svg>
                   </div>
                 </div>
-
-                <button
-                  onClick={() => selectEvent(event)}
-                  className="shrink-0 rounded-lg bg-[#1C2321] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1F7A6C]"
-                >
-                  Enter
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </main>
-     </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
+    </>
   );
 }

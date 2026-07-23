@@ -49,82 +49,90 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
+  --background: #0D0F12;
+  --foreground: #F9FAFB;
+  --card: #14171D;
+  --card-foreground: #F9FAFB;
+  --popover: #14171D;
+  --popover-foreground: #F9FAFB;
+  --primary: #2DD4BF;
+  --primary-foreground: #0D0F12;
+  --secondary: #1E232D;
+  --secondary-foreground: #F9FAFB;
+  --muted: #1E232D;
+  --muted-foreground: #94A3B8;
+  --accent: #1E232D;
+  --accent-foreground: #F9FAFB;
+  --destructive: #EF4444;
+  --border: #232833;
+  --input: #232833;
+  --ring: #2DD4BF;
+  --radius: 0.75rem;
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* ── Convene Dark Design Tokens ──────────────────────────────── */
+  --convene-teal: #2DD4BF;
+  --convene-teal-hover: #14B8A6;
+  --convene-ink: #F9FAFB;
+  --convene-paper: #14171D;
+  --convene-hairline: #232833;
+  --convene-hairline-alt: #1B1F27;
+  --convene-muted: #94A3B8;
+  --convene-muted-dark: #CBD5E1;
+  --convene-body: #94A3B8;
+  --convene-amber: #F59E0B;
+  --convene-error: #EF4444;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-[#232833];
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: #0D0F12;
+    color: #F9FAFB;
+    color-scheme: dark;
   }
   html {
     @apply font-sans;
+    color-scheme: dark;
+    background-color: #0D0F12;
   }
+}
+
+/* ── Shared form input ──────────────────────────────────── */
+.input-field {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--convene-hairline);
+  background-color: #14171D;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.875rem;
+  color: #F9FAFB;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.input-field:focus {
+  border-color: var(--convene-teal);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15);
+}
+.input-field::placeholder {
+  color: var(--convene-muted);
+}
+
+/* ── Scrollbar hide ─────────────────────────────────────── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Page transitions ───────────────────────────────────── */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
 }

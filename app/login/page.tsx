@@ -22,6 +22,7 @@ function LoginPageContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [loginAs, setLoginAs] = useState<LoginAs>("attendee");
 
   const [typed, setTyped] = useState("");
@@ -66,8 +67,19 @@ function LoginPageContent() {
     []
   );
 
-  async function login() {
+  async function login(e?: React.FormEvent) {
+    if (e) e.preventDefault();
+    if (!email.trim() || !password.trim()) {
+      setError("Please enter your email and password.");
+      return;
+    }
+    if (!email.includes("@")) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
     try {
+      setError(null);
       setLoading(true);
 
       const res = await api.post("/api/auth/login", {
@@ -83,8 +95,8 @@ function LoginPageContent() {
       // to whichever tab the person picked.
       const effectiveRole: LoginAs = res.data.user?.role || loginAs;
       router.push(effectiveRole === "organizer" ? "/organizer" : "/events");
-    } catch (err) {
-      alert("Invalid email or password");
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Invalid email or password");
       console.error(err);
     } finally {
       setLoading(false);
@@ -109,16 +121,7 @@ function LoginPageContent() {
         }}
       />
 
-      {/* Drifting rings, reminiscent of the Antigravity site's ring particles */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <div className="ring ring-a" />
-        <div className="ring ring-b" />
-        <div className="ring ring-c" />
-      </div>
 
-      {/* Slow floating orbs */}
-      <div className="pointer-events-none absolute -left-32 top-1/4 h-72 w-72 rounded-full bg-[#1F7A6C]/25 blur-3xl orb-a" />
-      <div className="pointer-events-none absolute -right-24 bottom-1/4 h-96 w-96 rounded-full bg-[#5B4B8A]/20 blur-3xl orb-b" />
 
       {/* Twinkling particles */}
       <div className="pointer-events-none absolute inset-0">
@@ -148,32 +151,14 @@ function LoginPageContent() {
           <span className="typewriter-cursor">|</span>
         </h1>
         <p className="mb-8 text-center text-sm text-white/50">
-          {loginAs === "organizer"
-            ? "Sign in to schedule sessions and manage your event."
-            : "Sign in to see what's happening at your event."}
+          Sign in to see what's happening at your event.
         </p>
 
-        <Card className="w-[420px] border-white/10 bg-white/[0.04] backdrop-blur-xl">
+        <Card className="w-full max-w-[420px] border-white/10 bg-white/[0.04] backdrop-blur-xl">
           <CardContent className="space-y-4 pt-6">
-            <div className="flex rounded-lg border border-white/10 bg-white/5 p-1">
-              {(["attendee", "organizer"] as LoginAs[]).map((role) => (
-                <button
-                  key={role}
-                  type="button"
-                  onClick={() => setLoginAs(role)}
-                  className={`flex-1 rounded-md py-2 text-sm font-semibold capitalize transition ${
-                    loginAs === role
-                      ? "bg-[#1F7A6C] text-white"
-                      : "text-white/50 hover:text-white/80"
-                  }`}
-                >
-                  {role}
-                </button>
-              ))}
-            </div>
-
-            <div>
-              <Label className="text-white/70">Email</Label>
+            <form onSubmit={login} className="space-y-4">
+              <div>
+                <Label className="text-white/70">Email</Label>
               <Input
                 type="email"
                 value={email}
@@ -197,21 +182,28 @@ function LoginPageContent() {
               />
             </div>
 
-            <Button
-              className="w-full bg-[#1F7A6C] text-white hover:bg-[#19645A]"
-              onClick={login}
-              disabled={loading}
-            >
-              {loading ? "Signing in…" : "Sign in"}
-            </Button>
+              <Button
+                type="submit"
+                className="w-full bg-[#1F7A6C] text-white hover:bg-[#19645A]"
+                disabled={loading}
+              >
+                {loading ? "Signing in…" : "Sign in"}
+              </Button>
+            </form>
 
             <Button
+              type="button"
               variant="outline"
               className="w-full border-white/15 bg-transparent text-white hover:bg-white/5 hover:text-white"
               onClick={() => router.push("/signup")}
             >
               Create account
             </Button>
+            {error && (
+              <p className="text-center text-sm font-medium text-[#B14A3F]">
+                {error}
+              </p>
+            )}
           </CardContent>
         </Card>
       </div>

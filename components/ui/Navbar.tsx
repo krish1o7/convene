@@ -32,12 +32,15 @@ import Link from "next/link";
 type User = {
   name: string;
   email: string;
+  role?: string;
 };
 
 const NAV_LINKS = [
+  { href: "/home", label: "Home" },
   { href: "/events", label: "Events" },
   { href: "/agenda", label: "Agenda" },
   { href: "/network", label: "Network" },
+  { href: "/organizer", label: "Organizer" },
 ];
 
 export default function Navbar() {
@@ -84,16 +87,16 @@ export default function Navbar() {
   }
 
   function isActive(href: string) {
+    if (href === "/") return pathname === "/";
     return pathname === href || pathname?.startsWith(href + "/");
   }
 
   return (
-    <div className="sticky top-0 z-50 border-b border-[#DEE3E0] bg-white/90 backdrop-blur">
+    <div className="border-b border-[#232833] bg-[#0D0F12]/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         {/* Brand */}
-        <Link href="/events" className="flex items-center gap-2 shrink-0">
-         
-          <span className="text-lg font-bold tracking-tight text-[#1C2321]">
+        <Link href="/" className="flex items-center gap-2 shrink-0">
+          <span className="text-lg font-bold tracking-tight text-white">
             CONVENE
           </span>
         </Link>
@@ -106,8 +109,8 @@ export default function Navbar() {
               href={link.href}
               className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
                 isActive(link.href)
-                  ? "bg-[#1F7A6C]/10 text-[#1F7A6C]"
-                  : "text-[#5C6B73] hover:bg-[#F4F6F5] hover:text-[#1C2321]"
+                  ? "bg-[#2DD4BF]/15 text-[#2DD4BF]"
+                  : "text-[#94A3B8] hover:bg-[#1E232D] hover:text-white"
               }`}
             >
               {link.label}
@@ -119,37 +122,37 @@ export default function Navbar() {
         <div className="relative hidden md:block" ref={menuRef}>
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2 transition hover:bg-[#F4F6F5]"
+            className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2 transition hover:bg-[#1E232D]"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1F7A6C] text-sm font-bold text-white">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#2DD4BF] text-sm font-bold text-[#0D0F12]">
               {user?.name?.charAt(0)?.toUpperCase() || "G"}
             </div>
-            <span className="max-w-[10rem] truncate text-sm font-semibold text-[#1C2321]">
+            <span className="max-w-[10rem] truncate text-sm font-semibold text-white">
               {user?.name || "Guest"}
             </span>
             <ChevronDown open={menuOpen} />
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-xl border border-[#DEE3E0] bg-white shadow-lg">
-              <div className="border-b border-[#DEE3E0] px-4 py-3">
-                <p className="truncate text-sm font-semibold text-[#1C2321]">
+            <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-xl border border-[#232833] bg-[#14171D] shadow-2xl z-50">
+              <div className="border-b border-[#232833] px-4 py-3">
+                <p className="truncate text-sm font-semibold text-white">
                   {user?.name || "Guest"}
                 </p>
-                <p className="truncate text-xs text-[#9AA5A2]">
+                <p className="truncate text-xs text-[#94A3B8]">
                   {user?.email || "Not signed in"}
                 </p>
               </div>
               <Link
                 href="/profile"
                 onClick={() => setMenuOpen(false)}
-                className="block px-4 py-2.5 text-sm font-medium text-[#1C2321] hover:bg-[#F4F6F5]"
+                className="block px-4 py-2.5 text-sm font-medium text-[#E2E8F0] hover:bg-[#1E232D]"
               >
                 View profile
               </Link>
               <button
                 onClick={logOut}
-                className="block w-full px-4 py-2.5 text-left text-sm font-medium text-[#B14A3F] hover:bg-[#B14A3F]/5"
+                className="block w-full px-4 py-2.5 text-left text-sm font-medium text-[#EF4444] hover:bg-[#EF4444]/10"
               >
                 Log out
               </button>
@@ -160,7 +163,7 @@ export default function Navbar() {
         {/* Mobile trigger */}
         <button
           onClick={() => setMobileOpen((v) => !v)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-[#1C2321] md:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-white md:hidden"
           aria-label="Toggle menu"
         >
           {mobileOpen ? <IconClose /> : <IconMenu />}
@@ -169,16 +172,16 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t border-[#DEE3E0] bg-white px-6 py-4 md:hidden">
+        <div className="border-t border-[#232833] bg-[#14171D] px-6 py-4 md:hidden">
           <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1F7A6C] text-base font-bold text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2DD4BF] text-base font-bold text-[#0D0F12]">
               {user?.name?.charAt(0)?.toUpperCase() || "G"}
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-[#1C2321]">
+              <p className="truncate text-sm font-semibold text-white">
                 {user?.name || "Guest"}
               </p>
-              <p className="truncate text-xs text-[#9AA5A2]">{user?.email}</p>
+              <p className="truncate text-xs text-[#94A3B8]">{user?.email}</p>
             </div>
           </div>
 
@@ -189,8 +192,8 @@ export default function Navbar() {
                 href={link.href}
                 className={`rounded-lg px-3 py-2.5 text-sm font-semibold ${
                   isActive(link.href)
-                    ? "bg-[#1F7A6C]/10 text-[#1F7A6C]"
-                    : "text-[#1C2321] hover:bg-[#F4F6F5]"
+                    ? "bg-[#2DD4BF]/15 text-[#2DD4BF]"
+                    : "text-[#E2E8F0] hover:bg-[#1E232D]"
                 }`}
               >
                 {link.label}
@@ -200,15 +203,15 @@ export default function Navbar() {
               href="/profile"
               className={`rounded-lg px-3 py-2.5 text-sm font-semibold ${
                 isActive("/profile")
-                  ? "bg-[#1F7A6C]/10 text-[#1F7A6C]"
-                  : "text-[#1C2321] hover:bg-[#F4F6F5]"
+                  ? "bg-[#2DD4BF]/15 text-[#2DD4BF]"
+                  : "text-[#E2E8F0] hover:bg-[#1E232D]"
               }`}
             >
               Profile
             </Link>
             <button
               onClick={logOut}
-              className="mt-2 rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-[#B14A3F] hover:bg-[#B14A3F]/5"
+              className="mt-2 rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-[#EF4444] hover:bg-[#EF4444]/10"
             >
               Log out
             </button>
